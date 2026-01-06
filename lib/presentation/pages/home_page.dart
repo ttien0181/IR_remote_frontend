@@ -115,7 +115,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.dashboard, size: 24, color: Colors.blue),
+                const Icon(Icons.router, size: 24, color: Colors.blue),
                 const SizedBox(height: 6),
                 const Text(
                   'IoT IR Control',
@@ -159,23 +159,23 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   Widget _buildNavigationSidebar() {
     return Container(
-      width: 250,
+      width: 200,
       color: Colors.grey.shade100,
       child: Column(
         children: [
           // Header
           Container(
             padding: const EdgeInsets.all(16),
-            color: Theme.of(context).primaryColor,
+            color: Colors.transparent,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.dashboard, size: 24, color: Colors.white),
+                const Icon(Icons.router, size: 24, color: Colors.blue),
                 const SizedBox(height: 6),
                 const Text(
                   'IoT IR Control',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.blue,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),

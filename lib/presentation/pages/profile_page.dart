@@ -15,13 +15,11 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
-  final _emailController = TextEditingController();
   final _usernameController = TextEditingController();
   bool _isSaving = false;
 
   @override
   void dispose() {
-    _emailController.dispose();
     _usernameController.dispose();
     super.dispose();
   }
@@ -46,9 +44,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         username: _usernameController.text.trim().isEmpty
             ? currentUser.username
             : _usernameController.text.trim(),
-        email: _emailController.text.trim().isEmpty
-            ? currentUser.email
-            : _emailController.text.trim(),
       );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -92,7 +87,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         }
 
         final user = snapshot.data!;
-        _emailController.text = user.email;
         _usernameController.text = user.username ?? '';
 
         return Scaffold(
@@ -128,8 +122,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         ),
                         const SizedBox(height: 12),
                         Text('User ID: ${user.id}', style: const TextStyle(color: Colors.grey)),
-                        // const SizedBox(height: 8),
-                        // Text('Email verified: ${user.emailVerified ? 'Yes' : 'No'}'),
+                        const SizedBox(height: 8),
+                        Text('Email: ${user.email}'),
                         if (user.createdAt != null) ...[
                           const SizedBox(height: 8),
                           Text('Created: ${DateFormat('yyyy-MM-dd HH:mm').format(user.createdAt!)}'),
@@ -150,15 +144,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 12),
-                        TextField(
-                          controller: _emailController,
-                          decoration: const InputDecoration(
-                            labelText: 'Email',
-                            border: OutlineInputBorder(),
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                        ),
-                        const SizedBox(height: 16),
                         TextField(
                           controller: _usernameController,
                           decoration: const InputDecoration(

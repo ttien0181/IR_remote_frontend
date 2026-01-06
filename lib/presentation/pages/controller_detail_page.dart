@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_application_1/data/models/controller.dart';
 import 'package:flutter_application_1/presentation/providers/controllers_provider.dart';
@@ -128,9 +129,25 @@ class _ControllerDetailPageState extends ConsumerState<ControllerDetailPage> {
                                     ),
                                   ),
                                   const SizedBox(height: 4),
-                                  Text(
-                                    'ID: ${widget.controller.id ?? 'Unknown'}',
-                                    style: const TextStyle(fontSize: 13, color: Colors.grey),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          'ID: ${widget.controller.id ?? 'Unknown'}',
+                                          style: const TextStyle(fontSize: 13, color: Colors.grey),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.copy, size: 18),
+                                        onPressed: () {
+                                          Clipboard.setData(ClipboardData(text: widget.controller.id ?? ''));
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(content: Text('Controller ID copied')),
+                                          );
+                                        },
+                                        tooltip: 'Copy ID',
+                                      ),
+                                    ],
                                   ),
                                 ],
                                 ),
@@ -139,6 +156,10 @@ class _ControllerDetailPageState extends ConsumerState<ControllerDetailPage> {
                           ),
                           const SizedBox(height: 8),
                           Text('Room: ${_getRoomName(widget.controller.roomId)}'),
+                          if (widget.controller.description != null && widget.controller.description!.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            Text('Description: ${widget.controller.description}'),
+                          ],
                         ],
                       ),
                     ),

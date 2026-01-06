@@ -42,4 +42,14 @@ class CommandsRepository {
       throw mapToAppException(e);
     }
   }
+
+  Future<Command> getCommandById(String id) async {
+    try {
+      final response = await _dio.get('/commands/$id');
+      final data = response.data['data'];
+      return Command.fromJson(data);
+    } catch (e) {
+      throw mapToAppException(e);
+    }
+  }
 }

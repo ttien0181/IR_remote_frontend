@@ -4,6 +4,7 @@ import 'package:flutter_application_1/presentation/providers/commands_provider.d
 import 'package:flutter_application_1/presentation/widgets/loading_widget.dart';
 import 'package:flutter_application_1/presentation/widgets/error_state_widget.dart';
 import 'package:intl/intl.dart';
+import 'command_detail_page.dart';
 
 class HistoryPage extends ConsumerStatefulWidget {
   const HistoryPage({super.key});
@@ -383,6 +384,16 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
                             ],
                           ),
                           trailing: _buildStatusBadge(command.status),
+                          onTap: () {
+                            if (command.id != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => CommandDetailPage(commandId: command.id!),
+                                ),
+                              );
+                            }
+                          },
                         ),
                       );
                     },
@@ -411,10 +422,10 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
   }
 
   Icon _getStatusIcon(String? status) {
-    Color iconColor = _getStatusColor(status); // Gán màu sắc từ hàm _getStatusColor
+    // Color iconColor = _getStatusColor(status); // Gán màu sắc từ hàm _getStatusColor
 
     switch (status) {
-      case 'queue':
+      case 'queued':
         return Icon(Icons.pending_outlined);
       case 'failed':
         return Icon(Icons.wifi_tethering_error_outlined);
@@ -423,7 +434,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
       case 'acked':
         return Icon(Icons.task_alt);
       default:
-        return Icon(Icons.help, color: iconColor);
+        return Icon(Icons.help);
     }
   }
 
@@ -436,7 +447,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
         return Colors.red;
       case 'sent':
         return Colors.blue;
-      case 'queue':
+      case 'queued':
         return Colors.grey;
       default:
         return Colors.grey;
