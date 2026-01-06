@@ -13,6 +13,7 @@ import '../../data/repositories/ir_codes_repository.dart';
 import '../../data/repositories/room_controllers_repository.dart';
 import '../../data/repositories/room_appliances_repository.dart';
 import '../../data/repositories/controller_appliances_repository.dart';
+import '../../data/repositories/users_repository.dart';
 
 // Storage provider
 final storageProvider = Provider<FlutterSecureStorage>((ref) {
@@ -78,6 +79,10 @@ final roomAppliancesRepositoryProvider = Provider<RoomAppliancesRepository>((ref
 
 final controllerAppliancesRepositoryProvider = Provider<ControllerAppliancesRepository>((ref) {
   return ControllerAppliancesRepository(dio: ref.watch(dioProvider));
+});
+
+final usersRepositoryProvider = Provider<UsersRepository>((ref) {
+  return UsersRepository(dio: ref.watch(dioProvider));
 });
 
 // Auth state provider

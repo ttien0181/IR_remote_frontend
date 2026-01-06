@@ -29,8 +29,6 @@ _$CommandImpl _$$CommandImplFromJson(Map<String, dynamic> json) =>
       applianceId: json['appliance_id'],
       irCodeId: json['ir_code_id'],
       action: json['action'] as String,
-      topic: json['topic'] as String?,
-      payload: json['payload'] as String?,
       status: json['status'] as String? ?? 'queued',
       error: json['error'] as String?,
       sentAt: json['sent_at'] == null
@@ -56,8 +54,6 @@ Map<String, dynamic> _$$CommandImplToJson(_$CommandImpl instance) =>
       'appliance_id': instance.applianceId,
       'ir_code_id': instance.irCodeId,
       'action': instance.action,
-      'topic': instance.topic,
-      'payload': instance.payload,
       'status': instance.status,
       'error': instance.error,
       'sent_at': instance.sentAt?.toIso8601String(),

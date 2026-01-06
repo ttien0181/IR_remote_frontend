@@ -28,9 +28,9 @@ AppException mapToAppException(Object error) {
         error.type == DioExceptionType.connectionError) {
       return const NetworkException('Unable to connect to the server.');
     }
-
+    print(error.response?.data);
     return const UnknownAppException('Unexpected error occurred. Please try again.');
   }
-
-  return const UnknownAppException('Có lỗi không xác định.');
+  print('🔥 Original error: $error');
+  return UnknownAppException(error.toString());
 }

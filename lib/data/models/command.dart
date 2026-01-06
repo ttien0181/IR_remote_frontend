@@ -29,8 +29,8 @@ class Command with _$Command {
     @JsonKey(name: 'appliance_id') dynamic applianceId, // String ID (list) or Appliance object (detail)
     @JsonKey(name: 'ir_code_id') dynamic irCodeId, // String ID (list) or IrCodeRef object (detail)
     required String action,
-    String? topic,
-    String? payload,
+    // String? topic,
+    // String? payload,
     @Default('queued') String status, // 'queued', 'sent', 'acked', 'failed'
     String? error,
     @JsonKey(name: 'sent_at') DateTime? sentAt,

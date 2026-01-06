@@ -9,194 +9,11 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-## 📋 Mục Lục
-1. [Authentication](#1-authentication-public)
-2. [Users](#2-users-protected)
-3. [Rooms](#3-rooms-protected)
-4. [Controllers](#4-controllers-protected)
-5. [Appliances](#5-appliances-protected)
-6. [IR Codes](#6-ir-codes-protected)
-7. [Commands](#7-commands-protected)
-8. [Telemetry](#8-telemetry-protected)
-9. [Health Check](#9-health-check-protected)
-10. [Error Codes](#error-codes)
-
----
-
-## 1. Authentication (Public)
-
-### 1.1. Đăng ký tài khoản
-
-**Endpoint:** `POST /api/auth/register`
-
-**Request:**
-```bash
-curl -X POST http://localhost:5000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "nguyenvana@example.com",
-    "password": "SecurePass123!",
-    "username": "nguyenvana"
-  }'
-```
-
-**Request Body:**
-```json
-{
-  "email": "nguyenvana@example.com",
-  "password": "SecurePass123!",
-  "username": "nguyenvana"
-}
-```
-
-**Response 201 (Success):**
-```json
-{
-  "status": "success",
-  "data": {
-    "id": "676abc123def456789012345",
-    "email": "nguyenvana@example.com",
-    "username": "nguyenvana",
-    "is_verified": false
-  }
-}
-```
-
-**Note:** Mã xác nhận 6 số sẽ được gửi qua email, có hiệu lực 15 phút.
-
-**Errors:**
-- `400` - Email hoặc password thiếu
-- `409` - Email đã được đăng ký
-
----
-
-### 1.2. Đăng nhập
-
-**Endpoint:** `POST /api/auth/login`
-
-**Request:**
-```bash
-curl -X POST http://localhost:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "nguyenvana@example.com",
-    "password": "SecurePass123!"
-  }'
-```
-
-**Request Body:**
-```json
-{
-  "email": "nguyenvana@example.com",
-  "password": "SecurePass123!"
-}
-```
-
-**Response 200 (Success):**
-```json
-{
-  "status": "success",
-  "data": {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "user": {
-      "id": "676abc123def456789012345",
-      "email": "nguyenvana@example.com",
-      "username": "nguyenvana",
-      "role": "user"
-    }
-  }
-}
-```
-
-**Errors:**
-- `400` - Email hoặc password thiếu
-- `401` - Email hoặc password không đúng
-- `403` - Email chưa được xác thực
-
----
-
-### 1.3. Xác thực email
-
-**Endpoint:** `POST /api/auth/verify-email`
-
-**Request:**
-```bash
-curl -X POST http://localhost:5000/api/auth/verify-email \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "nguyenvana@example.com",
-    "code": "123456"
-  }'
-```
-
-**Request Body:**
-```json
-{
-  "email": "nguyenvana@example.com",
-  "code": "123456"
-}
-```
-
-**Response 200 (Success):**
-```json
-{
-  "status": "success",
-  "data": {
-    "message": "Email verified successfully"
-  }
-}
-```
-
-**Errors:**
-- `400` - Email hoặc code thiếu
-- `404` - User không tồn tại
-- `409` - Email đã được xác thực trước đó
-- `410` - Mã xác nhận đã hết hạn
-- `401` - Mã xác nhận không chính xác
-
----
-
-### 1.4. Gửi lại mã xác nhận
-
-**Endpoint:** `POST /api/auth/resend-code`
-
-**Request:**
-```bash
-curl -X POST http://localhost:5000/api/auth/resend-code \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "nguyenvana@example.com"
-  }'
-```
-
-**Request Body:**
-```json
-{
-  "email": "nguyenvana@example.com"
-}
-```
-
-**Response 200 (Success):**
-```json
-{
-  "status": "success",
-  "data": {
-    "message": "Verification code resent successfully"
-  }
-}
-```
-
-**Errors:**
-- `400` - Email thiếu
-- `404` - User không tồn tại
-- `409` - Email đã được xác thực
-- `429` - Gửi lại quá nhanh (phải chờ ít nhất 1 phút)
-
----
-
 ## 2. Users (Protected)
 
 ### 2.1. Tạo user mới (Admin only)
+
+**Auth:** Chỉ `admin`
 
 **Endpoint:** `POST /api/users`
 
@@ -250,6 +67,8 @@ curl -X POST http://localhost:5000/api/users \
 
 ### 2.2. Lấy danh sách users
 
+**Auth:** Chỉ `admin`
+
 **Endpoint:** `GET /api/users`
 
 **Request:**
@@ -290,6 +109,8 @@ curl -X GET http://localhost:5000/api/users \
 
 ### 2.3. Lấy thông tin user theo ID
 
+**Auth:** Chỉ `admin`
+
 **Endpoint:** `GET /api/users/:id`
 
 **Request:**
@@ -320,7 +141,9 @@ curl -X GET http://localhost:5000/api/users/676abc123def456789012345 \
 
 ---
 
-### 2.4. Cập nhật user
+### 2.4. Cập nhật user (admin hoặc chính chủ)
+
+**Auth:** `admin` hoặc chính user đó (token _id trùng với `:id`)
 
 **Endpoint:** `PUT /api/users/:id` hoặc `PATCH /api/users/:id`
 
@@ -360,6 +183,10 @@ curl -X PUT http://localhost:5000/api/users/676abc123def456789012345 \
 }
 ```
 
+**Notes:**
+- User thường chỉ được phép cập nhật chính mình.
+- Admin có thể cập nhật bất kỳ user nào.
+
 **Errors:**
 - `400` - ID không hợp lệ hoặc không có dữ liệu để cập nhật
 - `400` - Role không hợp lệ
@@ -369,6 +196,35 @@ curl -X PUT http://localhost:5000/api/users/676abc123def456789012345 \
 ---
 
 ### 2.5. Xóa user
+
+**Auth:** Chỉ `admin`
+
+**Endpoint:** `DELETE /api/users/:id`
+
+**Request:**
+```bash
+curl -X DELETE http://localhost:5000/api/users/676abc123def456789012345 \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+**Response 200:**
+```json
+{
+  "status": "success",
+  "message": "User deleted successfully",
+  "data": {
+    "_id": "676abc123def456789012345",
+    "username": "nguyenvana_updated",
+    "email": "nguyenvana@example.com"
+  }
+}
+```
+
+**Errors:**
+- `400` - ID không hợp lệ
+- `404` - User không tồn tại
+
+---
 
 **Endpoint:** `DELETE /api/users/:id` hoặc `PATCH /api/users/:id`
 
