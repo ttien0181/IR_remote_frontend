@@ -114,18 +114,23 @@ class _ControllerDetailPageState extends ConsumerState<ControllerDetailPage> {
                           const SizedBox(height: 12),
                           Row(
                             children: [
-                            const Icon(Icons.router, size: 32, color: Colors.red),
+                            const Icon(Icons.router, size: 32, color: Colors.blue),
                             const SizedBox(width: 16),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Name: ${widget.controller.name}',
+                                    widget.controller.name,
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                     ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'ID: ${widget.controller.id ?? 'Unknown'}',
+                                    style: const TextStyle(fontSize: 13, color: Colors.grey),
                                   ),
                                 ],
                                 ),
@@ -148,7 +153,7 @@ class _ControllerDetailPageState extends ConsumerState<ControllerDetailPage> {
                       padding: const EdgeInsets.all(16),
                       child: Row(
                         children: [
-                          const Icon(Icons.devices, size: 32, color: Colors.blue),
+                          const Icon(Icons.devices, size: 32, color: Colors.green),
                           const SizedBox(width: 16),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,12 +217,16 @@ class _ControllerDetailPageState extends ConsumerState<ControllerDetailPage> {
   }
 
   Future<void> _showEditDialog() async {
+    final roomId = _extractId(widget.controller.roomId);
+    
     final result = await showControllerFormDialog(
       context: context,
       title: 'Edit Controller',
+      ref: ref,
       initialData: ControllerFormData(
         name: widget.controller.name,
         description: widget.controller.description,
+        roomId: roomId,
       ),
     );
 
@@ -228,6 +237,7 @@ class _ControllerDetailPageState extends ConsumerState<ControllerDetailPage> {
             id: widget.controller.id!,
             name: result.name,
             description: result.description,
+            roomId: result.roomId,
           );
 
       if (mounted) {

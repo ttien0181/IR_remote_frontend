@@ -25,6 +25,7 @@ mixin _$User {
   String get id => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   String? get username => throw _privateConstructorUsedError;
+  @JsonKey(name: 'is_verified')
   bool get emailVerified => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
   DateTime? get updatedAt => throw _privateConstructorUsedError;
@@ -47,7 +48,7 @@ abstract class $UserCopyWith<$Res> {
     @JsonKey(name: '_id') String id,
     String email,
     String? username,
-    bool emailVerified,
+    @JsonKey(name: 'is_verified') bool emailVerified,
     DateTime? createdAt,
     DateTime? updatedAt,
   });
@@ -119,7 +120,7 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
     @JsonKey(name: '_id') String id,
     String email,
     String? username,
-    bool emailVerified,
+    @JsonKey(name: 'is_verified') bool emailVerified,
     DateTime? createdAt,
     DateTime? updatedAt,
   });
@@ -182,7 +183,7 @@ class _$UserImpl implements _User {
     @JsonKey(name: '_id') required this.id,
     required this.email,
     this.username,
-    this.emailVerified = false,
+    @JsonKey(name: 'is_verified') required this.emailVerified,
     this.createdAt,
     this.updatedAt,
   });
@@ -198,7 +199,7 @@ class _$UserImpl implements _User {
   @override
   final String? username;
   @override
-  @JsonKey()
+  @JsonKey(name: 'is_verified')
   final bool emailVerified;
   @override
   final DateTime? createdAt;
@@ -258,7 +259,7 @@ abstract class _User implements User {
     @JsonKey(name: '_id') required final String id,
     required final String email,
     final String? username,
-    final bool emailVerified,
+    @JsonKey(name: 'is_verified') required final bool emailVerified,
     final DateTime? createdAt,
     final DateTime? updatedAt,
   }) = _$UserImpl;
@@ -273,6 +274,7 @@ abstract class _User implements User {
   @override
   String? get username;
   @override
+  @JsonKey(name: 'is_verified')
   bool get emailVerified;
   @override
   DateTime? get createdAt;

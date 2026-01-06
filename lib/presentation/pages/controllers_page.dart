@@ -179,6 +179,7 @@ class _ControllersPageState extends ConsumerState<ControllersPage> {
     final result = await showControllerFormDialog(
       context: context,
       title: 'Add Controller',
+      ref: ref,
     );
 
     if (result == null) return;
@@ -187,6 +188,7 @@ class _ControllersPageState extends ConsumerState<ControllersPage> {
       await ref.read(controllersListProvider.notifier).createController(
             name: result.name,
             description: result.description,
+            roomId: result.roomId,
           );
 
       if (context.mounted) {
@@ -202,12 +204,16 @@ class _ControllersPageState extends ConsumerState<ControllersPage> {
   }
 
   Future<void> _showEditDialog(controller) async {
+    final roomId = controller.roomId is String ? controller.roomId : (controller.roomId as Map?)?['_id'] ?? (controller.roomId as Map?)?['id'];
+    
     final result = await showControllerFormDialog(
       context: context,
       title: 'Edit Controller',
+      ref: ref,
       initialData: ControllerFormData(
         name: controller.name,
         description: controller.description,
+        roomId: roomId,
       ),
     );
 
@@ -218,6 +224,7 @@ class _ControllersPageState extends ConsumerState<ControllersPage> {
             id: controller.id!,
             name: result.name,
             description: result.description,
+            roomId: result.roomId,
           );
 
       if (context.mounted) {

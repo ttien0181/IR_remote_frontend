@@ -238,9 +238,8 @@ mixin _$Command {
   dynamic get applianceId => throw _privateConstructorUsedError; // String ID (list) or Appliance object (detail)
   @JsonKey(name: 'ir_code_id')
   dynamic get irCodeId => throw _privateConstructorUsedError; // String ID (list) or IrCodeRef object (detail)
-  String get action => throw _privateConstructorUsedError;
-  String? get topic => throw _privateConstructorUsedError;
-  String? get payload => throw _privateConstructorUsedError;
+  String get action => throw _privateConstructorUsedError; // String? topic,
+  // String? payload,
   String get status =>
       throw _privateConstructorUsedError; // 'queued', 'sent', 'acked', 'failed'
   String? get error => throw _privateConstructorUsedError;
@@ -275,8 +274,6 @@ abstract class $CommandCopyWith<$Res> {
     @JsonKey(name: 'appliance_id') dynamic applianceId,
     @JsonKey(name: 'ir_code_id') dynamic irCodeId,
     String action,
-    String? topic,
-    String? payload,
     String status,
     String? error,
     @JsonKey(name: 'sent_at') DateTime? sentAt,
@@ -308,8 +305,6 @@ class _$CommandCopyWithImpl<$Res, $Val extends Command>
     Object? applianceId = freezed,
     Object? irCodeId = freezed,
     Object? action = null,
-    Object? topic = freezed,
-    Object? payload = freezed,
     Object? status = null,
     Object? error = freezed,
     Object? sentAt = freezed,
@@ -347,14 +342,6 @@ class _$CommandCopyWithImpl<$Res, $Val extends Command>
                 ? _value.action
                 : action // ignore: cast_nullable_to_non_nullable
                       as String,
-            topic: freezed == topic
-                ? _value.topic
-                : topic // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            payload: freezed == payload
-                ? _value.payload
-                : payload // ignore: cast_nullable_to_non_nullable
-                      as String?,
             status: null == status
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
@@ -401,8 +388,6 @@ abstract class _$$CommandImplCopyWith<$Res> implements $CommandCopyWith<$Res> {
     @JsonKey(name: 'appliance_id') dynamic applianceId,
     @JsonKey(name: 'ir_code_id') dynamic irCodeId,
     String action,
-    String? topic,
-    String? payload,
     String status,
     String? error,
     @JsonKey(name: 'sent_at') DateTime? sentAt,
@@ -433,8 +418,6 @@ class __$$CommandImplCopyWithImpl<$Res>
     Object? applianceId = freezed,
     Object? irCodeId = freezed,
     Object? action = null,
-    Object? topic = freezed,
-    Object? payload = freezed,
     Object? status = null,
     Object? error = freezed,
     Object? sentAt = freezed,
@@ -472,14 +455,6 @@ class __$$CommandImplCopyWithImpl<$Res>
             ? _value.action
             : action // ignore: cast_nullable_to_non_nullable
                   as String,
-        topic: freezed == topic
-            ? _value.topic
-            : topic // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        payload: freezed == payload
-            ? _value.payload
-            : payload // ignore: cast_nullable_to_non_nullable
-                  as String?,
         status: null == status
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
@@ -520,8 +495,6 @@ class _$CommandImpl implements _Command {
     @JsonKey(name: 'appliance_id') this.applianceId,
     @JsonKey(name: 'ir_code_id') this.irCodeId,
     required this.action,
-    this.topic,
-    this.payload,
     this.status = 'queued',
     this.error,
     @JsonKey(name: 'sent_at') this.sentAt,
@@ -558,10 +531,8 @@ class _$CommandImpl implements _Command {
   // String ID (list) or IrCodeRef object (detail)
   @override
   final String action;
-  @override
-  final String? topic;
-  @override
-  final String? payload;
+  // String? topic,
+  // String? payload,
   @override
   @JsonKey()
   final String status;
@@ -583,7 +554,7 @@ class _$CommandImpl implements _Command {
 
   @override
   String toString() {
-    return 'Command(id: $id, userId: $userId, roomId: $roomId, controllerId: $controllerId, applianceId: $applianceId, irCodeId: $irCodeId, action: $action, topic: $topic, payload: $payload, status: $status, error: $error, sentAt: $sentAt, ackAt: $ackAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Command(id: $id, userId: $userId, roomId: $roomId, controllerId: $controllerId, applianceId: $applianceId, irCodeId: $irCodeId, action: $action, status: $status, error: $error, sentAt: $sentAt, ackAt: $ackAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -604,8 +575,6 @@ class _$CommandImpl implements _Command {
             ) &&
             const DeepCollectionEquality().equals(other.irCodeId, irCodeId) &&
             (identical(other.action, action) || other.action == action) &&
-            (identical(other.topic, topic) || other.topic == topic) &&
-            (identical(other.payload, payload) || other.payload == payload) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.error, error) || other.error == error) &&
             (identical(other.sentAt, sentAt) || other.sentAt == sentAt) &&
@@ -627,8 +596,6 @@ class _$CommandImpl implements _Command {
     const DeepCollectionEquality().hash(applianceId),
     const DeepCollectionEquality().hash(irCodeId),
     action,
-    topic,
-    payload,
     status,
     error,
     sentAt,
@@ -660,8 +627,6 @@ abstract class _Command implements Command {
     @JsonKey(name: 'appliance_id') final dynamic applianceId,
     @JsonKey(name: 'ir_code_id') final dynamic irCodeId,
     required final String action,
-    final String? topic,
-    final String? payload,
     final String status,
     final String? error,
     @JsonKey(name: 'sent_at') final DateTime? sentAt,
@@ -691,11 +656,8 @@ abstract class _Command implements Command {
   @JsonKey(name: 'ir_code_id')
   dynamic get irCodeId; // String ID (list) or IrCodeRef object (detail)
   @override
-  String get action;
-  @override
-  String? get topic;
-  @override
-  String? get payload;
+  String get action; // String? topic,
+  // String? payload,
   @override
   String get status; // 'queued', 'sent', 'acked', 'failed'
   @override
