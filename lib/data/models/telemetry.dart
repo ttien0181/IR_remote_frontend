@@ -30,3 +30,19 @@ class TelemetryStat with _$TelemetryStat {
 
   factory TelemetryStat.fromJson(Map<String, dynamic> json) => _$TelemetryStatFromJson(json);
 }
+
+// Realtime telemetry data from socket
+@freezed
+class RealtimeTelemetryData with _$RealtimeTelemetryData {
+  const factory RealtimeTelemetryData({
+    @JsonKey(name: 'controller_id') required String controllerId,
+    required String metric,
+    required double value,
+    required String unit,
+    @JsonKey(name: 'ts') required DateTime timestamp,
+  }) = _RealtimeTelemetryData;
+
+  factory RealtimeTelemetryData.fromJson(Map<String, dynamic> json) =>
+      _$RealtimeTelemetryDataFromJson(json);
+}
+

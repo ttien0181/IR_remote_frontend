@@ -17,6 +17,7 @@ Future<ControllerFormData?> showControllerFormDialog({
     context: context,
     builder: (context) => _ControllerFormDialogContent(
       title: title,
+      initialData: initialData,
       nameController: nameController,
       descriptionController: descriptionController,
       selectedRoomId: selectedRoomId,
@@ -62,6 +63,7 @@ Future<ControllerFormData?> showControllerFormDialog({
 
 class _ControllerFormDialogContent extends ConsumerWidget {
   final String title;
+  final ControllerFormData? initialData;
   final TextEditingController nameController;
   final TextEditingController descriptionController;
   final String? selectedRoomId;
@@ -71,6 +73,7 @@ class _ControllerFormDialogContent extends ConsumerWidget {
 
   const _ControllerFormDialogContent({
     required this.title,
+    this.initialData,
     required this.nameController,
     required this.descriptionController,
     required this.selectedRoomId,
@@ -120,9 +123,12 @@ class _ControllerFormDialogContent extends ConsumerWidget {
                       child: Text(room.name),
                     );
                   }).toList(),
-                  onChanged: (value) {
+                  onChanged: initialData == null ? (value) {
                     onRoomChanged(value);
-                  },
+                  } : null,
+                  disabledHint: selectedRoomId != null
+                      ? Text(rooms.firstWhere((r) => r.id == selectedRoomId, orElse: () => rooms.first).name)
+                      : const Text('Select a room'),
                   hint: const Text('Select a room'),
                 );
               },

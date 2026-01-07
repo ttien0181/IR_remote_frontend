@@ -16,7 +16,7 @@ class HistoryPage extends ConsumerStatefulWidget {
 class _HistoryPageState extends ConsumerState<HistoryPage> {
   DateTime? _startDate;
   DateTime? _endDate;
-  String? _selectedStatus; // null, 'queue', 'sent', 'acked', 'failed'
+  String? _selectedStatus; // null, 'queued', 'sent', 'acked', 'failed'
   Set<String> _selectedDeviceTypes = {};
   bool _sortAscending = false; // false = descending (newest first), true = ascending
 
@@ -153,28 +153,44 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
   }
 
   Future<void> _showStatusFilterDialog() async {
-    final statuses = ['queue', 'sent', 'acked', 'failed'];
+    final statuses = ['queued', 'sent', 'acked', 'failed'];
     
     await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Filter by Status'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: statuses.map((status) => CheckboxListTile(
-            title: Text(status.toUpperCase()),
-            value: _selectedStatus == status,
-            onChanged: (_) => _toggleStatusFilter(status),
-          )).toList(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Done'),
-          ),
-        ],
-      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            final statuses = ['queued', 'sent', 'acked', 'failed'];
+
+            return AlertDialog(
+              title: const Text('Filter by Status'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: statuses.map((status) {
+                  return CheckboxListTile(
+                    title: Text(status.toUpperCase()),
+                    value: _selectedStatus == status,
+                    onChanged: (_) {
+                      setState(() {
+                        _toggleStatusFilter(status);
+                      });
+                      setStateDialog(() {}); // Rebuild ONLY dialog
+                    },
+                  );
+                }).toList(),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Done'),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
+
   }
 
   Future<void> _showDeviceTypeFilterDialog(List commands) async {
@@ -199,24 +215,38 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
 
     await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Filter by Device Type'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: deviceTypes.toList().map((deviceType) => CheckboxListTile(
-            title: Text(deviceType),
-            value: _selectedDeviceTypes.contains(deviceType),
-            onChanged: (_) => _toggleDeviceTypeFilter(deviceType),
-          )).toList(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Done'),
-          ),
-        ],
-      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              title: const Text('Filter by Device Type'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: deviceTypes.map((deviceType) {
+                  return CheckboxListTile(
+                    title: Text(deviceType),
+                    value: _selectedDeviceTypes.contains(deviceType),
+                    onChanged: (_) {
+                      setState(() {
+                        _toggleDeviceTypeFilter(deviceType);
+                      });
+                      setStateDialog(() {});
+                    },
+                  );
+                }).toList(),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Done'),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
+
   }
 
   @override

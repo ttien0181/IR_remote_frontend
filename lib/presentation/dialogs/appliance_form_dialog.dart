@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/data/models/controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/providers/providers.dart';
 import 'appliance_form_data.dart';
@@ -19,7 +20,7 @@ Future<ApplianceFormData?> showApplianceFormDialog({
   List<String> brands = ['Sony', 'Daikin', 'Toshiba', 'Samsung'];
   List<String> deviceTypes = ['TV', 'Air Conditioner', 'Fan'];
 
-  List<dynamic> controllers = [];
+  List<Controller> controllers = [];
   try {
     controllers = await ref.read(controllersRepositoryProvider).getControllers();
   } catch (_) {
@@ -100,11 +101,14 @@ Future<ApplianceFormData?> showApplianceFormDialog({
                     child: Text(c.name),
                   );
                 }).toList(),
-                onChanged: (value) {
+                onChanged: initialData == null ? (value) {
                   setState(() {
                     selectedControllerId = value;
                   });
-                },
+                } : null,
+                disabledHint: selectedControllerId != null
+                    ? Text(controllers.firstWhere((c) => c.id == selectedControllerId, orElse: () => controllers.first).name)
+                    : const Text('Select a controller'),
               ),
             ],
           ),
