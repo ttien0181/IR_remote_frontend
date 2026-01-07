@@ -47,3 +47,23 @@ Map<String, dynamic> _$$TelemetryStatImplToJson(_$TelemetryStatImpl instance) =>
       'count': instance.count,
       'timestamp': instance.timestamp?.toIso8601String(),
     };
+
+_$RealtimeTelemetryDataImpl _$$RealtimeTelemetryDataImplFromJson(
+  Map<String, dynamic> json,
+) => _$RealtimeTelemetryDataImpl(
+  controllerId: json['controller_id'] as String,
+  metric: json['metric'] as String,
+  value: (json['value'] as num).toDouble(),
+  unit: json['unit'] as String,
+  timestamp: DateTime.parse(json['ts'] as String),
+);
+
+Map<String, dynamic> _$$RealtimeTelemetryDataImplToJson(
+  _$RealtimeTelemetryDataImpl instance,
+) => <String, dynamic>{
+  'controller_id': instance.controllerId,
+  'metric': instance.metric,
+  'value': instance.value,
+  'unit': instance.unit,
+  'ts': instance.timestamp.toIso8601String(),
+};
