@@ -29,55 +29,58 @@ Future<ApplianceFormData?> showApplianceFormDialog({
 
   return showDialog<ApplianceFormData>(
     context: context,
-    builder: (context) => StatefulBuilder(
-      builder: (context, setState) => AlertDialog(
-        title: Text(title),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Name field (text input)
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Name',
-                  border: OutlineInputBorder(),
+    builder: (context) {
+      final colorScheme = Theme.of(context).colorScheme;
+      
+      return StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Name field (text input)
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Name *',
+                    prefixIcon: Icon(Icons.devices_rounded),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-              // Device Type dropdown
-              DropdownButtonFormField<String>(
-                value: selectedDeviceType,
-                decoration: const InputDecoration(
-                  labelText: 'Device Type',
-                  border: OutlineInputBorder(),
+                // Device Type dropdown
+                DropdownButtonFormField<String>(
+                  value: selectedDeviceType,
+                  decoration: const InputDecoration(
+                    labelText: 'Device Type *',
+                    prefixIcon: Icon(Icons.category_rounded),
+                  ),
+                  items: deviceTypes.map((type) {
+                    return DropdownMenuItem<String>(
+                      value: type,
+                      child: Text(type),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedDeviceType = value;
+                    });
+                  },
                 ),
-                items: deviceTypes.map((type) {
-                  return DropdownMenuItem<String>(
-                    value: type,
-                    child: Text(type),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedDeviceType = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-              // Brand dropdown
-              DropdownButtonFormField<String>(
-                value: selectedBrand,
-                decoration: const InputDecoration(
-                  labelText: 'Brand',
-                  border: OutlineInputBorder(),
-                ),
-                items: brands.map((brand) {
-                  return DropdownMenuItem<String>(
-                    value: brand,
-                    child: Text(brand),
+                // Brand dropdown
+                DropdownButtonFormField<String>(
+                  value: selectedBrand,
+                  decoration: const InputDecoration(
+                    labelText: 'Brand *',
+                    prefixIcon: Icon(Icons.business_rounded),
+                  ),
+                  items: brands.map((brand) {
+                    return DropdownMenuItem<String>(
+                      value: brand,
+                      child: Text(brand),
                   );
                 }).toList(),
                 onChanged: (value) {
@@ -86,69 +89,71 @@ Future<ApplianceFormData?> showApplianceFormDialog({
                   });
                 },
               ),
-              const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-              // Controller dropdown
-              DropdownButtonFormField<String>(
-                value: selectedControllerId,
-                decoration: const InputDecoration(
-                  labelText: 'Controller',
-                  border: OutlineInputBorder(),
+                // Controller dropdown
+                DropdownButtonFormField<String>(
+                  value: selectedControllerId,
+                  decoration: const InputDecoration(
+                    labelText: 'Controller',
+                    prefixIcon: Icon(Icons.router_rounded),
+                  ),
+                  items: controllers.map((c) {
+                    return DropdownMenuItem<String>(
+                      value: c.id,
+                      child: Text(c.name),
+                    );
+                  }).toList(),
+                  onChanged: initialData == null ? (value) {
+                    setState(() {
+                      selectedControllerId = value;
+                    });
+                  } : null,
+                  disabledHint: selectedControllerId != null
+                      ? Text(controllers.firstWhere((c) => c.id == selectedControllerId, orElse: () => controllers.first).name)
+                      : const Text('Select a controller'),
                 ),
-                items: controllers.map((c) {
-                  return DropdownMenuItem<String>(
-                    value: c.id,
-                    child: Text(c.name),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () {
+                // Kiểm tra nếu tên, loại thiết bị, và thương hiệu không trống
+                if (nameController.text.trim().isEmpty ||
+                    selectedBrand == null ||
+                    selectedDeviceType == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('Please fill in all required fields.'),
+                      backgroundColor: colorScheme.error,
+                      behavior: SnackBarBehavior.floating,
+                    ),
                   );
-                }).toList(),
-                onChanged: initialData == null ? (value) {
-                  setState(() {
-                    selectedControllerId = value;
-                  });
-                } : null,
-                disabledHint: selectedControllerId != null
-                    ? Text(controllers.firstWhere((c) => c.id == selectedControllerId, orElse: () => controllers.first).name)
-                    : const Text('Select a controller'),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Kiểm tra nếu tên, loại thiết bị, và thương hiệu không trống
-              if (nameController.text.trim().isEmpty ||
-                  selectedBrand == null ||
-                  selectedDeviceType == null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Please fill in all required fields.'),
-                    backgroundColor: Colors.red,
+                  return;
+                }
+
+                Navigator.pop(
+                  context,
+                  ApplianceFormData(
+                    name: nameController.text.trim(),
+                    deviceType: selectedDeviceType,
+                    brand: selectedBrand,
+                    roomId: roomId,
+                    controllerId: selectedControllerId,
                   ),
                 );
-                return;
-              }
-
-              Navigator.pop(
-                context,
-                ApplianceFormData(
-                  name: nameController.text.trim(),
-                  deviceType: selectedDeviceType,
-                  brand: selectedBrand,
-                  roomId: roomId,
-                  controllerId: selectedControllerId,
-                ),
-              );
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    ),
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      );
+    },
   );
 }
 

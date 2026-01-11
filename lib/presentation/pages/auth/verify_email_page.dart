@@ -97,6 +97,9 @@ class _VerifyEmailPageState extends ConsumerState<VerifyEmailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Verify Email'),
@@ -111,28 +114,31 @@ class _VerifyEmailPageState extends ConsumerState<VerifyEmailPage> {
               children: [
                 const SizedBox(height: 32),
                 Icon(
-                  Icons.mark_email_read,
+                  Icons.mark_email_read_rounded,
                   size: 80,
-                  color: Theme.of(context).primaryColor,
+                  color: colorScheme.primary,
                 ),
                 const SizedBox(height: 32),
                 Text(
                   'Verify Your Email',
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style: textTheme.headlineMedium,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'We sent a 6-digit code to',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   widget.email,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.primary,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
@@ -140,10 +146,13 @@ class _VerifyEmailPageState extends ConsumerState<VerifyEmailPage> {
                   controller: _codeController,
                   keyboardType: TextInputType.number,
                   maxLength: 6,
+                  textAlign: TextAlign.center,
+                  style: textTheme.headlineSmall?.copyWith(
+                    letterSpacing: 8,
+                  ),
                   decoration: const InputDecoration(
                     labelText: 'Verification Code',
-                    prefixIcon: Icon(Icons.pin),
-                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.pin_rounded),
                     counterText: '',
                   ),
                   validator: (value) {
@@ -157,16 +166,16 @@ class _VerifyEmailPageState extends ConsumerState<VerifyEmailPage> {
                   },
                 ),
                 const SizedBox(height: 24),
-                ElevatedButton(
+                FilledButton(
                   onPressed: _isLoading ? null : _verify,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
                   child: _isLoading
-                      ? const SizedBox(
+                      ? SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: colorScheme.onPrimary,
+                          ),
                         )
                       : const Text('Verify'),
                 ),

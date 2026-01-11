@@ -32,15 +32,15 @@ class _RoomsPageState extends ConsumerState<RoomsPage> {
     final roomsState = ref.watch(roomsListProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rooms'),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.refresh),
-        //     onPressed: () => ref.read(roomsListProvider.notifier).loadRooms(),
-        //   ),
-        // ],
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Rooms'),
+      //   // actions: [
+      //   //   IconButton(
+      //   //     icon: const Icon(Icons.refresh),
+      //   //     onPressed: () => ref.read(roomsListProvider.notifier).loadRooms(),
+      //   //   ),
+      //   // ],
+      // ),
       body: Column(
         children: [
           // Search bar
@@ -95,39 +95,19 @@ class _RoomsPageState extends ConsumerState<RoomsPage> {
 
                 return RefreshIndicator(
                   onRefresh: () => ref.read(roomsListProvider.notifier).loadRooms(),
-                  child: ListView.builder(
-                    itemCount: rooms.length,
+                  child: GridView.builder(
                     padding: const EdgeInsets.all(8),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: _getGridColumns(MediaQuery.of(context).size.width),
+                      childAspectRatio: 1.2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                    ),
+                    itemCount: rooms.length,
                     itemBuilder: (context, index) {
                       final room = rooms[index];
                       return Card(
-                        child: ListTile(
-                          leading: const CircleAvatar(
-                            child: Icon(Icons.meeting_room),
-                          ),
-                          title: Text(room.name),
-                          subtitle: room.description != null
-                              ? Text(room.description!)
-                              : null,
-                          trailing: PopupMenuButton(
-                            itemBuilder: (context) => [
-                              const PopupMenuItem(
-                                value: 'edit',
-                                child: Text('Edit'),
-                              ),
-                              const PopupMenuItem(
-                                value: 'delete',
-                                child: Text('Delete'),
-                              ),
-                            ],
-                            onSelected: (value) {
-                              if (value == 'edit') {
-                                _showEditRoomDialog(room);
-                              } else if (value == 'delete') {
-                                _deleteRoom(room);
-                              }
-                            },
-                          ),
+                        child: InkWell(
                           onTap: () {
                             Navigator.push(
                               context,
@@ -136,6 +116,57 @@ class _RoomsPageState extends ConsumerState<RoomsPage> {
                               ),
                             );
                           },
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Avatar + Menu hàng trên
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const CircleAvatar(
+                                      child: Icon(Icons.meeting_room_rounded),
+                                    ),
+                                    const Spacer(),
+                                    PopupMenuButton(
+                                      itemBuilder: (context) => const [
+                                        PopupMenuItem(value: 'edit', child: Text('Edit')),
+                                        PopupMenuItem(value: 'delete', child: Text('Delete')),
+                                      ],
+                                      onSelected: (value) {
+                                        if (value == 'edit') {
+                                          _showEditRoomDialog(room);
+                                        } else if (value == 'delete') {
+                                          _deleteRoom(room);
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+
+                                // Tên phòng
+                                const SizedBox(height: 12),
+                                Text(
+                                  room.name,
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+
+                                // Mô tả
+                                if (room.description != null && room.description!.isNotEmpty) ...[
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    room.description!,
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
                         ),
                       );
                     },
@@ -236,6 +267,16 @@ class _RoomsPageState extends ConsumerState<RoomsPage> {
       if (context.mounted) {
         showAppError(context, e);
       }
+    }
+  }
+
+  int _getGridColumns(double width) {
+    if (width < 600) {
+      return 2; // Phones
+    } else if (width < 1200) {
+      return 3; // Tablets
+    } else {
+      return 4; // Desktop
     }
   }
 }

@@ -1,8 +1,12 @@
 class AppConfig {
+  static const String serverUrl = String.fromEnvironment('SERVER_URL',  defaultValue: 'https://ir-remote-backend.onrender.com');
+  
   static const String baseUrl = String.fromEnvironment(
     'BASE_URL',
-    defaultValue: 'http://192.168.1.2:5000/api',
+    defaultValue: '$serverUrl/api',
   );
+
+  
   
   static const String appName = 'IoT IR Control';
   

@@ -259,7 +259,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Command History'),
+        // title: const Text('Command History'),
         actions: [
           if (_startDate != null || _endDate != null || _selectedStatus != null || _selectedDeviceTypes.isNotEmpty)
             IconButton(
@@ -386,8 +386,14 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
 
                 return RefreshIndicator(
                   onRefresh: () => ref.read(commandsListProvider.notifier).loadCommands(),
-                  child: ListView.builder(
+                  child: GridView.builder(
                     padding: const EdgeInsets.all(8),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: _getGridColumns(MediaQuery.of(context).size.width),
+                      childAspectRatio: 1.3,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                    ),
                     itemCount: sortedCommands.length,
                     itemBuilder: (context, index) {
                       final command = sortedCommands[index];
@@ -396,24 +402,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
                       final formattedDate = DateFormat('MMM dd, HH:mm').format(sentAt);
 
                       return Card(
-                        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: _getStatusColor(command.status),
-                            child: _getStatusIcon(command.status),
-                          ),
-                          title: Text(applianceName),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Action: ${command.action ?? "Unknown"}'),
-                              Text(
-                                formattedDate,
-                                style: const TextStyle(fontSize: 12, color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                          trailing: _buildStatusBadge(command.status),
+                        child: InkWell(
                           onTap: () {
                             if (command.id != null) {
                               Navigator.push(
@@ -424,6 +413,56 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
                               );
                             }
                           },
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundColor: _getStatusColor(command.status),
+                                      radius: 18,
+                                      child: _getStatusIcon(command.status),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            applianceName,
+                                            style: Theme.of(context).textTheme.titleSmall,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Text(
+                                            'Action: ${command.action ?? "Unknown"}',
+                                            style: Theme.of(context).textTheme.bodySmall,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      formattedDate,
+                                      style: Theme.of(context).textTheme.labelSmall,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    _buildStatusBadge(command.status),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       );
                     },
@@ -500,5 +539,15 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
         ),
       ),
     );
+  }
+
+  int _getGridColumns(double width) {
+    if (width < 600) {
+      return 2; // Phones
+    } else if (width < 1200) {
+      return 3; // Tablets
+    } else {
+      return 4; // Desktop
+    }
   }
 }

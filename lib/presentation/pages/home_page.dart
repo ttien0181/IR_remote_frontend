@@ -104,24 +104,38 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   Widget _buildNavigationDrawer() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    
     return Drawer(
       child: Column(
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
+              // gradient: LinearGradient(
+              //   colors: [
+              //     colorScheme.primaryContainer,
+              //     colorScheme.secondaryContainer,
+              //   ],
+              //   begin: Alignment.topLeft,
+              //   end: Alignment.bottomRight,
+              // ),
               color: Colors.transparent,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.router, size: 24, color: Colors.blue),
-                const SizedBox(height: 6),
-                const Text(
+                Icon(
+                  Icons.router_rounded,
+                  size: 48,
+                  color: colorScheme.onPrimaryContainer,
+                ),
+                const SizedBox(height: 12),
+                Text(
                   'IoT IR Control',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 20,
+                  style: textTheme.titleLarge?.copyWith(
+                    color: colorScheme.onPrimaryContainer,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -130,6 +144,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
           Expanded(
             child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               itemCount: _navItems.length,
               itemBuilder: (context, index) {
                 final item = _navItems[index];
@@ -137,7 +152,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                   leading: Icon(item.icon),
                   title: Text(item.label),
                   selected: _currentIndex == index,
-                  selectedTileColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
                   onTap: () {
                     setState(() => _currentIndex = index);
                     Navigator.pop(context);
@@ -147,10 +161,19 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
           ),
           const Divider(),
-          ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text('Logout', style: TextStyle(color: Colors.red)),
-            onTap: _logout,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+              leading: Icon(
+                Icons.logout_rounded,
+                color: colorScheme.error,
+              ),
+              title: Text(
+                'Logout',
+                style: TextStyle(color: colorScheme.error),
+              ),
+              onTap: _logout,
+            ),
           ),
         ],
       ),
@@ -158,25 +181,41 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   Widget _buildNavigationSidebar() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    
     return Container(
-      width: 200,
-      color: Colors.grey.shade100,
+      width: 250,
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
+        border: Border(
+          right: BorderSide(
+            color: colorScheme.outlineVariant,
+            width: 1,
+          ),
+        ),
+      ),
       child: Column(
         children: [
           // Header
           Container(
-            padding: const EdgeInsets.all(16),
-            color: Colors.transparent,
+            padding: const EdgeInsets.all(24),
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.router, size: 24, color: Colors.blue),
-                const SizedBox(height: 6),
-                const Text(
+                Icon(
+                  Icons.router_rounded,
+                  size: 36,
+                  color: colorScheme.onPrimaryContainer,
+                ),
+                const SizedBox(height: 12),
+                Text(
                   'IoT IR Control',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 20,
+                  style: textTheme.titleLarge?.copyWith(
+                    color: colorScheme.onPrimaryContainer,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -186,38 +225,34 @@ class _HomePageState extends ConsumerState<HomePage> {
           // Navigation items
           Expanded(
             child: ListView.builder(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
               itemCount: _navItems.length,
               itemBuilder: (context, index) {
                 final item = _navItems[index];
-                return Container(
-                  decoration: BoxDecoration(
-                    color: _currentIndex == index
-                        ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-                        : Colors.transparent,
-                    border: _currentIndex == index
-                        ? Border(
-                            left: BorderSide(
-                              color: Theme.of(context).primaryColor,
-                              width: 4,
-                            ),
-                          )
-                        : null,
-                  ),
+                final isSelected = _currentIndex == index;
+                
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
                   child: ListTile(
                     leading: Icon(
                       item.icon,
-                      color: _currentIndex == index
-                          ? Theme.of(context).primaryColor
-                          : Colors.grey.shade700,
+                      color: isSelected
+                          ? colorScheme.onSecondaryContainer
+                          : colorScheme.onSurfaceVariant,
                     ),
                     title: Text(
                       item.label,
-                      style: TextStyle(
-                        fontWeight: _currentIndex == index ? FontWeight.w600 : FontWeight.normal,
-                        color: _currentIndex == index
-                            ? Theme.of(context).primaryColor
-                            : Colors.grey.shade700,
+                      style: textTheme.labelLarge?.copyWith(
+                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                        color: isSelected
+                            ? colorScheme.onSecondaryContainer
+                            : colorScheme.onSurfaceVariant,
                       ),
+                    ),
+                    selected: isSelected,
+                    selectedTileColor: colorScheme.secondaryContainer,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     onTap: () {
                       setState(() => _currentIndex = index);
@@ -227,17 +262,26 @@ class _HomePageState extends ConsumerState<HomePage> {
               },
             ),
           ),
-          const Divider(),
+          Divider(color: colorScheme.outlineVariant),
           // Logout button
-          ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text(
-              'Logout',
-              style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+              leading: Icon(
+                Icons.logout_rounded,
+                color: colorScheme.error,
+              ),
+              title: Text(
+                'Logout',
+                style: textTheme.labelLarge?.copyWith(
+                  color: colorScheme.error,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              onTap: _logout,
             ),
-            onTap: _logout,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
         ],
       ),
     );

@@ -23,11 +23,14 @@ Future<ControllerFormData?> showControllerFormDialog({
       selectedRoomId: selectedRoomId,
       ref: ref,
       onSave: () {
+        final colorScheme = Theme.of(context).colorScheme;
+        
         if (nameController.text.trim().isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Please enter a controller name.'),
-              backgroundColor: Colors.red,
+            SnackBar(
+              content: const Text('Please enter a controller name.'),
+              backgroundColor: colorScheme.error,
+              behavior: SnackBarBehavior.floating,
             ),
           );
           return;
@@ -35,9 +38,10 @@ Future<ControllerFormData?> showControllerFormDialog({
 
         if (selectedRoomId == null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Please select a room.'),
-              backgroundColor: Colors.red,
+            SnackBar(
+              content: const Text('Please select a room.'),
+              backgroundColor: colorScheme.error,
+              behavior: SnackBarBehavior.floating,
             ),
           );
           return;
@@ -85,6 +89,7 @@ class _ControllerFormDialogContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final roomsState = ref.watch(roomsListProvider);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return AlertDialog(
       title: Text(title),
@@ -96,7 +101,7 @@ class _ControllerFormDialogContent extends ConsumerWidget {
               controller: nameController,
               decoration: const InputDecoration(
                 labelText: 'Name *',
-                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.router_rounded),
               ),
             ),
             const SizedBox(height: 16),
@@ -104,7 +109,7 @@ class _ControllerFormDialogContent extends ConsumerWidget {
               controller: descriptionController,
               decoration: const InputDecoration(
                 labelText: 'Description (optional)',
-                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.notes_rounded),
               ),
               maxLines: 3,
             ),
@@ -115,7 +120,7 @@ class _ControllerFormDialogContent extends ConsumerWidget {
                   value: selectedRoomId,
                   decoration: const InputDecoration(
                     labelText: 'Room *',
-                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.meeting_room_rounded),
                   ),
                   items: rooms.map((room) {
                     return DropdownMenuItem(
@@ -149,7 +154,7 @@ class _ControllerFormDialogContent extends ConsumerWidget {
           onPressed: () => Navigator.pop(context),
           child: const Text('Cancel'),
         ),
-        ElevatedButton(
+        FilledButton(
           onPressed: onSave,
           child: const Text('Save'),
         ),

@@ -31,15 +31,15 @@ class _ControllersPageState extends ConsumerState<ControllersPage> {
     final controllersState = ref.watch(controllersListProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Controllers'),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.refresh),
-        //     onPressed: () => ref.read(controllersListProvider.notifier).loadControllers(),
-        //   ),
-        // ],
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Controllers'),
+      //   // actions: [
+      //   //   IconButton(
+      //   //     icon: const Icon(Icons.refresh),
+      //   //     onPressed: () => ref.read(controllersListProvider.notifier).loadControllers(),
+      //   //   ),
+      //   // ],
+      // ),
       body: Column(
         children: [
           // Search bar
@@ -99,40 +99,21 @@ class _ControllersPageState extends ConsumerState<ControllersPage> {
 
                 return RefreshIndicator(
                   onRefresh: () => ref.read(controllersListProvider.notifier).loadControllers(),
-                  child: ListView.builder(
+                  child: GridView.builder(
                     padding: const EdgeInsets.all(8),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: _getGridColumns(MediaQuery.of(context).size.width),
+                      childAspectRatio: 1.0,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                    ),
                     itemCount: filteredControllers.length,
                     itemBuilder: (context, index) {
                       final controller = filteredControllers[index];
                       final roomName = _getRoomName(controller.roomId);
 
                       return Card(
-                        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            child: const Icon(Icons.router),
-                          ),
-                          title: Text(controller.name),
-                          subtitle: Text('Room: $roomName'),
-                          trailing: PopupMenuButton(
-                            itemBuilder: (context) => [
-                              const PopupMenuItem(
-                                value: 'edit',
-                                child: Text('Edit'),
-                              ),
-                              const PopupMenuItem(
-                                value: 'delete',
-                                child: Text('Delete'),
-                              ),
-                            ],
-                            onSelected: (value) {
-                              if (value == 'edit') {
-                                _showEditDialog(controller);
-                              } else if (value == 'delete') {
-                                _confirmDelete(controller);
-                              }
-                            },
-                          ),
+                        child: InkWell(
                           onTap: () {
                             Navigator.push(
                               context,
@@ -140,10 +121,58 @@ class _ControllersPageState extends ConsumerState<ControllersPage> {
                                 builder: (_) => ControllerDetailPage(controller: controller),
                               ),
                             ).then((_) {
-                              // Reload on return from detail page
                               ref.read(controllersListProvider.notifier).loadControllers();
                             });
                           },
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CircleAvatar(
+                                      child: const Icon(Icons.router_rounded),
+                                    ),
+                                    const Spacer(),
+                                    PopupMenuButton(
+                                      itemBuilder: (context) => [
+                                        const PopupMenuItem(value: 'edit', child: Text('Edit'),),
+                                        const PopupMenuItem(value: 'delete', child: Text('Delete'),),
+                                      ],
+                                      onSelected: (value) {
+                                        if (value == 'edit') {
+                                          _showEditDialog(controller);
+                                        } else if (value == 'delete') {
+                                          _confirmDelete(controller);
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+
+                                    // Expanded(
+                                    //   child: Text(
+                                    //     controller.name,
+                                    //     style: Theme.of(context).textTheme.titleMedium,
+                                    //     overflow: TextOverflow.ellipsis,
+                                    //   ),
+                                    // ),
+                                Text(
+                                  controller.name,
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  'Room: $roomName',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       );
                     },
@@ -260,6 +289,16 @@ class _ControllersPageState extends ConsumerState<ControllersPage> {
       if (context.mounted) {
         showAppError(context, e);
       }
+    }
+  }
+
+  int _getGridColumns(double width) {
+    if (width < 600) {
+      return 2; // Phones
+    } else if (width < 1200) {
+      return 3; // Tablets
+    } else {
+      return 4; // Desktop
     }
   }
 }

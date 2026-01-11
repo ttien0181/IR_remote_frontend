@@ -91,7 +91,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Profile'),
+            // title: const Text('Profile'),
             actions: [
               IconButton(
                 icon: _isSaving

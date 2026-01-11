@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_application_1/presentation/providers/telemetry_provider.dart';
 import 'package:flutter_application_1/presentation/providers/controllers_provider.dart';
 import 'package:flutter_application_1/presentation/providers/rooms_provider.dart';
@@ -134,9 +135,13 @@ class _TelemetryPageState extends ConsumerState<TelemetryPage> {
                   return Card(
                     elevation: 2,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     margin: const EdgeInsets.only(bottom: 12),
-                    child: ListTile(
+                    child: ExpansionTile(
+                      tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+
                       title: Text(
                         controller.name,
                         style: const TextStyle(
@@ -144,26 +149,37 @@ class _TelemetryPageState extends ConsumerState<TelemetryPage> {
                           fontSize: 16,
                         ),
                       ),
+
                       subtitle: Text(
                         roomName,
                         style: const TextStyle(fontSize: 13),
                       ),
+
                       trailing: Wrap(
-                        direction: Axis.horizontal,
                         spacing: 4,
                         children: [
                           _buildMetricChip(
                             label: 'Temp',
-                            value: temp == null ? '-- °C' : '${temp.toStringAsFixed(1)} °C',
+                            value: temp == null
+                                ? '-- °C'
+                                : '${temp.toStringAsFixed(1)} °C',
                             color: Colors.red,
                           ),
                           _buildMetricChip(
                             label: 'Humid',
-                            value: humid == null ? '-- %' : '${humid.toStringAsFixed(1)}%',
+                            value: humid == null
+                                ? '-- %'
+                                : '${humid.toStringAsFixed(1)}%',
                             color: Colors.blue,
                           ),
                         ],
                       ),
+                      children: [
+                        _buildTelemetryChart(
+                          controllerId: controllerId,
+                          telemetryState: telemetryState,
+                        ),
+                      ],
                     ),
                   );
                 },
@@ -196,4 +212,112 @@ class _TelemetryPageState extends ConsumerState<TelemetryPage> {
       ),
     );
   }
+}
+
+
+Widget _buildTelemetryChart({
+  required String controllerId,
+  required Map telemetryState,
+}) {
+  final allData = telemetryState[controllerId] ?? [];
+
+  if (allData.isEmpty) {
+    return const Padding(
+      padding: EdgeInsets.all(16),
+      child: Text(
+        'No telemetry data',
+        style: TextStyle(color: Colors.grey),
+      ),
+    );
+  }
+
+  final int count = 20;
+  final data = allData.length > count ? allData.sublist(allData.length - count) : allData;
+
+  final tempSpots = <FlSpot>[];
+  final humidSpots = <FlSpot>[];
+
+  int index = 0;
+  for (final t in data) {
+    if (t.metric == 'temp' || t.metric == 'temperature') {
+      tempSpots.add(FlSpot(index.toDouble(), t.value));
+    } else if (t.metric == 'humid' || t.metric == 'humidity') {
+      humidSpots.add(FlSpot(index.toDouble(), t.value));
+    }
+    index++;
+  }
+
+  double tempMin = tempSpots.isEmpty ? 0 : tempSpots.map((s) => s.y).reduce((a, b) => a < b ? a : b) - 2;
+  double tempMax = tempSpots.isEmpty ? 50 : tempSpots.map((s) => s.y).reduce((a, b) => a > b ? a : b) + 2;
+
+  double humidMin = humidSpots.isEmpty ? 0 : humidSpots.map((s) => s.y).reduce((a, b) => a < b ? a : b) - 2;
+  double humidMax = humidSpots.isEmpty ? 100 : humidSpots.map((s) => s.y).reduce((a, b) => a > b ? a : b) + 2;
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const SizedBox(height: 16),
+      const Text('Temperature', style: TextStyle(fontWeight: FontWeight.bold)),
+      const SizedBox(height: 8),
+      SizedBox(
+        height: 200,
+        child: LineChart(
+          LineChartData(
+            minY: tempMin,
+            maxY: tempMax,
+            lineBarsData: [
+              LineChartBarData(
+                spots: tempSpots,
+                isCurved: true,
+                color: Colors.red,
+                barWidth: 2,
+                dotData: FlDotData(show: true),
+              ),
+            ],
+            titlesData: FlTitlesData(
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false, interval: 5),
+              ),
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+            ),
+            gridData: FlGridData(show: true, horizontalInterval: 5),
+            borderData: FlBorderData(show: true),
+          ),
+        ),
+      ),
+      const SizedBox(height: 16),
+      const Text('Humidity', style: TextStyle(fontWeight: FontWeight.bold)),
+      const SizedBox(height: 8),
+      SizedBox(
+        height: 200,
+        child: LineChart(
+          LineChartData(
+            minY: humidMin,
+            maxY: humidMax,
+            lineBarsData: [
+              LineChartBarData(
+                spots: humidSpots,
+                isCurved: true,
+                color: Colors.blue,
+                barWidth: 2,
+                dotData: FlDotData(show: true),
+              ),
+            ],
+            titlesData: FlTitlesData(
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false, interval: 5),
+              ),
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+            ),
+            gridData: FlGridData(show: true, horizontalInterval: 5),
+            borderData: FlBorderData(show: true),
+          ),
+        ),
+      ),
+    ],
+  );
 }

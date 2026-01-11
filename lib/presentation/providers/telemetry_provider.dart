@@ -34,7 +34,7 @@ class SocketService {
       }
 
       _socket = io.io(
-        'http://localhost:5000',
+        AppConfig.serverUrl,
         io.OptionBuilder()
             .setTransports(['websocket'])
             .disableAutoConnect()

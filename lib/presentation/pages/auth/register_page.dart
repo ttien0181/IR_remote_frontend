@@ -72,6 +72,9 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register'),
@@ -86,14 +89,14 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
               children: [
                 const SizedBox(height: 32),
                 Icon(
-                  Icons.app_registration,
+                  Icons.app_registration_rounded,
                   size: 80,
-                  color: Theme.of(context).primaryColor,
+                  color: colorScheme.primary,
                 ),
                 const SizedBox(height: 32),
                 Text(
                   'Create Account',
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style: textTheme.headlineMedium,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
@@ -102,8 +105,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
                     labelText: 'Email',
-                    prefixIcon: Icon(Icons.email),
-                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.email_rounded),
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -120,8 +122,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   controller: _usernameController,
                   decoration: const InputDecoration(
                     labelText: 'Username (Optional)',
-                    prefixIcon: Icon(Icons.person),
-                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.person_rounded),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -130,11 +131,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    prefixIcon: const Icon(Icons.lock),
-                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.lock_rounded),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                        _obscurePassword ? Icons.visibility_rounded : Icons.visibility_off_rounded,
                       ),
                       onPressed: () {
                         setState(() => _obscurePassword = !_obscurePassword);
@@ -152,16 +152,16 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   },
                 ),
                 const SizedBox(height: 24),
-                ElevatedButton(
+                FilledButton(
                   onPressed: _isLoading ? null : _register,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
                   child: _isLoading
-                      ? const SizedBox(
+                      ? SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: colorScheme.onPrimary,
+                          ),
                         )
                       : const Text('Register'),
                 ),

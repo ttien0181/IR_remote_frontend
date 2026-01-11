@@ -119,43 +119,19 @@ class _ApplianceListSectionState extends State<ApplianceListSection> {
       );
     }
 
-    return Column(
-      children: appliances.map((appliance) {
+    return GridView.builder(
+      padding: const EdgeInsets.all(8),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: _getGridColumns(MediaQuery.of(context).size.width),
+        childAspectRatio: 1.1,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+      ),
+      itemCount: appliances.length,
+      itemBuilder: (context, index) {
+        final appliance = appliances[index];
         return Card(
-          margin: const EdgeInsets.only(bottom: 8),
-          child: ListTile(
-            leading: CircleAvatar(
-              child: Icon(
-                _getDeviceIcon(appliance.deviceType),
-              ),
-            ),
-            title: Text(appliance.name),
-            subtitle: Text(
-              '${appliance.brand ?? ''} • ${appliance.deviceType ?? ''}',
-            ),
-            trailing: PopupMenuButton<String>(
-              itemBuilder: (context) => const [
-                PopupMenuItem(
-                  value: 'edit',
-                  child: Text('Edit'),
-                ),
-                PopupMenuItem(
-                  value: 'delete',
-                  child: Text('Delete'),
-                ),
-              ],
-              onSelected: (value) {
-                if (value == 'edit') {
-                  if (widget.onEdit != null) {
-                    widget.onEdit!(appliance);
-                  }
-                } else if (value == 'delete') {
-                  if (widget.onDelete != null) {
-                    widget.onDelete!(appliance);
-                  }
-                }
-              },
-            ),
+          child: InkWell(
             onTap: () {
               Navigator.push(
                 context,
@@ -165,10 +141,90 @@ class _ApplianceListSectionState extends State<ApplianceListSection> {
                 ),
               );
             },
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        child: Icon(
+                          _getDeviceIcon(appliance.deviceType),
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              appliance.name,
+                              style: Theme.of(context).textTheme.titleSmall,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              appliance.brand ?? appliance.deviceType ?? '',
+                              style: Theme.of(context).textTheme.bodySmall,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      PopupMenuButton<String>(
+                        itemBuilder: (context) => const [
+                          PopupMenuItem(
+                            value: 'edit',
+                            child: Text('Edit'),
+                          ),
+                          PopupMenuItem(
+                            value: 'delete',
+                            child: Text('Delete'),
+                          ),
+                        ],
+                        onSelected: (value) {
+                          if (value == 'edit') {
+                            if (widget.onEdit != null) {
+                              widget.onEdit!(appliance);
+                            }
+                          } else if (value == 'delete') {
+                            if (widget.onDelete != null) {
+                              widget.onDelete!(appliance);
+                            }
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    appliance.deviceType ?? 'Unknown',
+                    style: Theme.of(context).textTheme.labelSmall,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
           ),
         );
-      }).toList(),
+      },
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
     );
+  }
+
+  int _getGridColumns(double width) {
+    if (width < 600) {
+      return 2; // Phones
+    } else if (width < 1200) {
+      return 3; // Tablets
+    } else {
+      return 4; // Desktop
+    }
   }
 }
 
