@@ -73,7 +73,7 @@ class _TelemetryPageState extends ConsumerState<TelemetryPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Telemetry'),
+        // title: const Text('Telemetry'),
         actions: [
           Padding(
             padding: const EdgeInsets.all(16),
@@ -143,13 +143,13 @@ class _TelemetryPageState extends ConsumerState<TelemetryPage> {
                       childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                       title: Text(
                         controller.name,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                       ),
                       subtitle: Text(
                         roomName,
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       trailing: Wrap(
                         spacing: 6,
@@ -243,11 +243,11 @@ Widget _buildTelemetryChart({
     index++;
   }
 
-  double tempMin = tempSpots.isEmpty ? 0 : tempSpots.map((s) => s.y).reduce((a, b) => a < b ? a : b) - 2;
-  double tempMax = tempSpots.isEmpty ? 50 : tempSpots.map((s) => s.y).reduce((a, b) => a > b ? a : b) + 2;
+  double tempMin = tempSpots.isEmpty ? 0 : tempSpots.map((s) => s.y).reduce((a, b) => a < b ? a : b) - 1;
+  double tempMax = tempSpots.isEmpty ? 50 : tempSpots.map((s) => s.y).reduce((a, b) => a > b ? a : b) + 1;
 
-  double humidMin = humidSpots.isEmpty ? 0 : humidSpots.map((s) => s.y).reduce((a, b) => a < b ? a : b) - 2;
-  double humidMax = humidSpots.isEmpty ? 100 : humidSpots.map((s) => s.y).reduce((a, b) => a > b ? a : b) + 2;
+  double humidMin = humidSpots.isEmpty ? 0 : humidSpots.map((s) => s.y).reduce((a, b) => a < b ? a : b) - 1;
+  double humidMax = humidSpots.isEmpty ? 100 : humidSpots.map((s) => s.y).reduce((a, b) => a > b ? a : b) + 1;
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,

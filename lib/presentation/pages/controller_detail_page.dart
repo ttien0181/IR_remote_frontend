@@ -105,13 +105,13 @@ class _ControllerDetailPageState extends ConsumerState<ControllerDetailPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Controller Info',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          // const Text(
+                          //   'Controller Info',
+                          //   style: TextStyle(
+                          //     fontSize: 16,
+                          //     fontWeight: FontWeight.bold,
+                          //   ),
+                          // ),
                           const SizedBox(height: 12),
                           Row(
                             children: [
@@ -124,8 +124,8 @@ class _ControllerDetailPageState extends ConsumerState<ControllerDetailPage> {
                                   Text(
                                     widget.controller.name,
                                     style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -134,7 +134,7 @@ class _ControllerDetailPageState extends ConsumerState<ControllerDetailPage> {
                                       Expanded(
                                         child: Text(
                                           'ID: ${widget.controller.id ?? 'Unknown'}',
-                                          style: const TextStyle(fontSize: 13, color: Colors.white),
+                                          style: Theme.of(context).textTheme.bodyMedium,
                                         ),
                                       ),
                                       IconButton(
@@ -182,8 +182,8 @@ class _ControllerDetailPageState extends ConsumerState<ControllerDetailPage> {
                               const Text(
                                 'Appliances',
                                 style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
+                                  fontSize: 20,
+                                  color: Colors.black,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),

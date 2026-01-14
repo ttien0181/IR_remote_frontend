@@ -208,7 +208,7 @@ class _ApplianceListSectionState extends State<ApplianceListSection> {
                     const SizedBox(height: 12),
                     Text(
                       appliance.name,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                       maxLines: 1,

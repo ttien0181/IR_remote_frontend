@@ -99,13 +99,14 @@ class _RoomsPageState extends ConsumerState<RoomsPage> {
                     padding: const EdgeInsets.all(8),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: _getGridColumns(MediaQuery.of(context).size.width),
-                      childAspectRatio: 1.2,
+                      childAspectRatio: 1.0,
                       crossAxisSpacing: 12,
                       mainAxisSpacing: 12,
                     ),
                     itemCount: rooms.length,
                     itemBuilder: (context, index) {
                       final room = rooms[index];
+                      final colorScheme = Theme.of(context).colorScheme;
                       return Card(
                         child: InkWell(
                           onTap: () {
@@ -125,8 +126,17 @@ class _RoomsPageState extends ConsumerState<RoomsPage> {
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const CircleAvatar(
-                                      child: Icon(Icons.meeting_room_rounded),
+                                    Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: colorScheme.secondaryContainer,
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: Icon(
+                                        Icons.meeting_room_rounded,
+                                        color: colorScheme.onSecondaryContainer,
+                                        size: 32,
+                                      ),
                                     ),
                                     const Spacer(),
                                     PopupMenuButton(

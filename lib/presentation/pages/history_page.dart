@@ -433,13 +433,13 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
                                           Text(
                                             applianceName,
                                             // style: Theme.of(context).textTheme.titleSmall,
-                                            style: Theme.of(context).textTheme.titleSmall,
+                                            style: Theme.of(context).textTheme.titleLarge,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                           Text(
                                             'Action: ${command.action ?? "Unknown"}',
-                                            style: Theme.of(context).textTheme.bodySmall,
+                                            style: Theme.of(context).textTheme.titleMedium,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),

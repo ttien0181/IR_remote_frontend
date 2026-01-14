@@ -168,15 +168,13 @@ class _ControllersPageState extends ConsumerState<ControllersPage> {
                                 const SizedBox(height: 12),
                                 Text(
                                   controller.name,
-                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                  style: Theme.of(context).textTheme.titleLarge,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   'Room: $roomName',
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                         color: colorScheme.onSurface,
                                       ),
                                   overflow: TextOverflow.ellipsis,
