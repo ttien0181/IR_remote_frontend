@@ -134,7 +134,7 @@ class _ControllerDetailPageState extends ConsumerState<ControllerDetailPage> {
                                       Expanded(
                                         child: Text(
                                           'ID: ${widget.controller.id ?? 'Unknown'}',
-                                          style: const TextStyle(fontSize: 13, color: Colors.grey),
+                                          style: const TextStyle(fontSize: 13, color: Colors.white),
                                         ),
                                       ),
                                       IconButton(

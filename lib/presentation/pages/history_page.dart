@@ -432,6 +432,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
                                         children: [
                                           Text(
                                             applianceName,
+                                            // style: Theme.of(context).textTheme.titleSmall,
                                             style: Theme.of(context).textTheme.titleSmall,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,

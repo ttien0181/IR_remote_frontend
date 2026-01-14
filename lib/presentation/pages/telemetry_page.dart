@@ -135,28 +135,24 @@ class _TelemetryPageState extends ConsumerState<TelemetryPage> {
                   return Card(
                     elevation: 2,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                     margin: const EdgeInsets.only(bottom: 12),
                     child: ExpansionTile(
                       tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-
                       title: Text(
                         controller.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
-
                       subtitle: Text(
                         roomName,
-                        style: const TextStyle(fontSize: 13),
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
-
                       trailing: Wrap(
-                        spacing: 4,
+                        spacing: 6,
                         children: [
                           _buildMetricChip(
                             label: 'Temp',
@@ -205,7 +201,7 @@ class _TelemetryPageState extends ConsumerState<TelemetryPage> {
       child: Text(
         '$label: $value',
         style: TextStyle(
-          fontSize: 12,
+          fontSize: 11,
           fontWeight: FontWeight.bold,
           color: color,
         ),

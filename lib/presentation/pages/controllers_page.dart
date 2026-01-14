@@ -111,9 +111,14 @@ class _ControllersPageState extends ConsumerState<ControllersPage> {
                     itemBuilder: (context, index) {
                       final controller = filteredControllers[index];
                       final roomName = _getRoomName(controller.roomId);
-
+                      final colorScheme = Theme.of(context).colorScheme;
                       return Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                         child: InkWell(
+                          borderRadius: BorderRadius.circular(20),
                           onTap: () {
                             Navigator.push(
                               context,
@@ -125,21 +130,30 @@ class _ControllersPageState extends ConsumerState<ControllersPage> {
                             });
                           },
                           child: Padding(
-                            padding: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(16),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    CircleAvatar(
-                                      child: const Icon(Icons.router_rounded),
+                                    Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: colorScheme.secondaryContainer,
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: Icon(
+                                        Icons.router_rounded,
+                                        color: colorScheme.onSecondaryContainer,
+                                        size: 32,
+                                      ),
                                     ),
                                     const Spacer(),
                                     PopupMenuButton(
-                                      itemBuilder: (context) => [
-                                        const PopupMenuItem(value: 'edit', child: Text('Edit'),),
-                                        const PopupMenuItem(value: 'delete', child: Text('Delete'),),
+                                      itemBuilder: (context) => const [
+                                        PopupMenuItem(value: 'edit', child: Text('Edit')),
+                                        PopupMenuItem(value: 'delete', child: Text('Delete')),
                                       ],
                                       onSelected: (value) {
                                         if (value == 'edit') {
@@ -151,23 +165,20 @@ class _ControllersPageState extends ConsumerState<ControllersPage> {
                                     ),
                                   ],
                                 ),
-
-                                    // Expanded(
-                                    //   child: Text(
-                                    //     controller.name,
-                                    //     style: Theme.of(context).textTheme.titleMedium,
-                                    //     overflow: TextOverflow.ellipsis,
-                                    //   ),
-                                    // ),
-                                Text(
-                                  controller.name,
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
                                 const SizedBox(height: 12),
                                 Text(
+                                  controller.name,
+                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
                                   'Room: $roomName',
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: colorScheme.onSurface,
+                                      ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ],
@@ -176,6 +187,7 @@ class _ControllersPageState extends ConsumerState<ControllersPage> {
                         ),
                       );
                     },
+
                   ),
                 );
               },
@@ -190,6 +202,7 @@ class _ControllersPageState extends ConsumerState<ControllersPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddDialog,
+        elevation: 4,
         child: const Icon(Icons.add),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/providers/providers.dart';
+import 'core/theme/app_colors.dart';
 import 'presentation/pages/auth/login_page.dart';
 import 'presentation/pages/home_page.dart';
 import 'presentation/widgets/loading_widget.dart';
@@ -25,15 +26,46 @@ class MyApp extends StatelessWidget {
   }
 
   ThemeData _buildLightTheme() {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: Colors.indigo,
-      secondary: Colors.teal,
-      brightness: Brightness.light,
+    final colorScheme = ColorScheme.light(
+      // Background: #F3F5FF
+      surface: const Color(0xFFF3F5FF),
+      onSurface: const Color(0xFF1B1D28), // Text primary
+      onSurfaceVariant: const Color(0xFF7B819A), // Text secondary
+      
+      // Primary blue: #4567FF
+      primary: const Color(0xFF4567FF),
+      onPrimary: Colors.white,
+      primaryContainer: const Color(0xFFB5C9FF), // Accent
+      onPrimaryContainer: const Color(0xFF1B1D28),
+      
+      // Secondary (using icon neutral)
+      secondary: const Color(0xFF6A7085), // Icon neutral
+      onSecondary: Colors.white,
+      secondaryContainer: const Color(0xFFB5C9FF),
+      onSecondaryContainer: const Color(0xFF1B1D28),
+      
+      // Tertiary
+      tertiary: const Color(0xFF4567FF),
+      onTertiary: Colors.white,
+      tertiaryContainer: const Color(0xFFB5C9FF),
+      onTertiaryContainer: const Color(0xFF1B1D28),
+      
+      // Error
+      error: const Color(0xFFB00020),
+      onError: Colors.white,
+      
+      // Card: #FFFFFF
+      surfaceContainerHighest: Colors.white,
+      outline: const Color(0xFF6A7085),
+      outlineVariant: const Color(0xFFB5C9FF),
     );
 
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
+      extensions: const <ThemeExtension<dynamic>>[
+        AppColors.light,
+      ],
       
       // AppBar Theme
       appBarTheme: AppBarTheme(
@@ -46,6 +78,7 @@ class MyApp extends StatelessWidget {
 
       // Card Theme
       cardTheme: CardThemeData(
+        color: const Color(0xFFFEFEFE), // thử màu bạn muốn
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
@@ -189,7 +222,7 @@ class MyApp extends StatelessWidget {
         titleSmall: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w500,
-          color: colorScheme.onSurface,
+          color: colorScheme.surface,
         ),
         bodyLarge: TextStyle(
           fontSize: 16,
@@ -226,15 +259,46 @@ class MyApp extends StatelessWidget {
   }
 
   ThemeData _buildDarkTheme() {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: Colors.indigo,
-      secondary: Colors.teal,
-      brightness: Brightness.dark,
+    final colorScheme = ColorScheme.dark(
+      // Background: #0D1321
+      surface: const Color(0xFF0D1321),
+      onSurface: const Color(0xFFFFFFFF), // Text primary
+      onSurfaceVariant: const Color(0xFFB8BED2), // Text secondary
+      
+      // Primary blue: #4C6FFF
+      primary: const Color(0xFF4C6FFF),
+      onPrimary: Colors.white,
+      primaryContainer: const Color(0xFF354B91), // Accent
+      onPrimaryContainer: const Color(0xFFFFFFFF),
+      
+      // Secondary (using icon neutral)
+      secondary: const Color(0xFF8A94AF), // Icon neutral
+      onSecondary: const Color(0xFF0D1321),
+      secondaryContainer: const Color(0xFF354B91),
+      onSecondaryContainer: const Color(0xFFFFFFFF),
+      
+      // Tertiary
+      tertiary: const Color(0xFF4C6FFF),
+      onTertiary: Colors.white,
+      tertiaryContainer: const Color(0xFF354B91),
+      onTertiaryContainer: const Color(0xFFFFFFFF),
+      
+      // Error
+      error: const Color(0xFFCF6679),
+      onError: const Color(0xFF0D1321),
+      
+      // Card: #1A2235
+      surfaceContainerHighest: const Color(0xFF1A2235),
+      outline: const Color(0xFF8A94AF),
+      outlineVariant: const Color(0xFF354B91),
     );
 
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
+      extensions: const <ThemeExtension<dynamic>>[
+        AppColors.dark,
+      ],
       
       // AppBar Theme
       appBarTheme: AppBarTheme(
@@ -247,6 +311,7 @@ class MyApp extends StatelessWidget {
 
       // Card Theme
       cardTheme: CardThemeData(
+        color: const Color(0xFF191970), // thử màu bạn muốn
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),

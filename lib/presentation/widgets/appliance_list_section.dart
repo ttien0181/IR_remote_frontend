@@ -130,83 +130,101 @@ class _ApplianceListSectionState extends State<ApplianceListSection> {
       itemCount: appliances.length,
       itemBuilder: (context, index) {
         final appliance = appliances[index];
-        return Card(
-          child: InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) =>
-                      ApplianceDetailPage(appliance: appliance),
-                ),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        child: Icon(
-                          _getDeviceIcon(appliance.deviceType),
-                          size: 20,
+        final colorScheme = Theme.of(context).colorScheme;
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        ApplianceDetailPage(appliance: appliance),
+                  ),
+                );
+              },
+              borderRadius: BorderRadius.circular(20),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: colorScheme.tertiaryContainer,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Icon(
+                            _getDeviceIcon(appliance.deviceType),
+                            color: colorScheme.onTertiaryContainer,
+                            size: 32,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              appliance.name,
-                              style: Theme.of(context).textTheme.titleSmall,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                        const Spacer(),
+                        PopupMenuButton<String>(
+                          itemBuilder: (context) => const [
+                            PopupMenuItem(
+                              value: 'edit',
+                              child: Text('Edit'),
                             ),
-                            Text(
-                              appliance.brand ?? appliance.deviceType ?? '',
-                              style: Theme.of(context).textTheme.bodySmall,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                            PopupMenuItem(
+                              value: 'delete',
+                              child: Text('Delete'),
                             ),
                           ],
+                          onSelected: (value) {
+                            if (value == 'edit') {
+                              if (widget.onEdit != null) {
+                                widget.onEdit!(appliance);
+                              }
+                            } else if (value == 'delete') {
+                              if (widget.onDelete != null) {
+                                widget.onDelete!(appliance);
+                              }
+                            }
+                          },
                         ),
-                      ),
-                      PopupMenuButton<String>(
-                        itemBuilder: (context) => const [
-                          PopupMenuItem(
-                            value: 'edit',
-                            child: Text('Edit'),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      appliance.name,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
-                          PopupMenuItem(
-                            value: 'delete',
-                            child: Text('Delete'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      appliance.brand ?? appliance.deviceType ?? 'Unknown',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
                           ),
-                        ],
-                        onSelected: (value) {
-                          if (value == 'edit') {
-                            if (widget.onEdit != null) {
-                              widget.onEdit!(appliance);
-                            }
-                          } else if (value == 'delete') {
-                            if (widget.onDelete != null) {
-                              widget.onDelete!(appliance);
-                            }
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    appliance.deviceType ?? 'Unknown',
-                    style: Theme.of(context).textTheme.labelSmall,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
